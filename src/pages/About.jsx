@@ -19,17 +19,16 @@ export default function About() {
       <section className="shell grid gap-14 py-20 lg:grid-cols-[0.5fr_0.5fr] lg:py-24">
         <SectionHeading eyebrow="Affiliation & recognition" title="On the record" />
         <Reveal>
-          <ul className="space-y-4">
-            {intro.credentials.map((line) => (
-              <li key={line} className="flex gap-4 border-b border-line pb-4 text-[0.9375rem] leading-relaxed text-muted">
-                <span className="mt-2 h-1.5 w-1.5 shrink-0 bg-accent" />
+          <ul className="space-y-2.5">
+            {[...intro.credentials, `Area of school: ${school.campusArea}`].map((line) => (
+              <li
+                key={line}
+                className="flex items-center gap-3.5 rounded-full border border-line bg-surface py-3 pl-4 pr-6 text-[0.875rem] leading-relaxed text-muted"
+              >
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
                 {line}
               </li>
             ))}
-            <li className="flex gap-4 text-[0.9375rem] leading-relaxed text-muted">
-              <span className="mt-2 h-1.5 w-1.5 shrink-0 bg-accent" />
-              Area of school: {school.campusArea}
-            </li>
           </ul>
         </Reveal>
       </section>
@@ -42,17 +41,19 @@ export default function About() {
             { label: "The group", value: `${school.group.name}, established ${school.group.established} — ${school.group.branches} branches` },
           ].map((item, index) => (
             <Reveal key={item.label} delay={index * 0.08}>
-              <p className="font-display text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-muted">
-                {item.label}
-              </p>
-              <p className="mt-3 font-display text-[1.25rem] font-extrabold leading-snug text-ink">{item.value}</p>
+              <div className="h-full rounded-[28px] border border-line bg-surface p-6">
+                <span className="inline-flex rounded-full border border-line px-3 py-1 font-display text-[0.625rem] font-bold uppercase tracking-[0.16em] text-muted">
+                  {item.label}
+                </span>
+                <p className="mt-4 font-display text-[1.125rem] font-extrabold leading-snug text-ink">{item.value}</p>
+              </div>
             </Reveal>
           ))}
         </div>
       </section>
 
       <section className="shell py-20 lg:py-24">
-        <Reveal className="grid gap-9 border border-line-strong bg-elevated p-8 lg:grid-cols-[1fr_auto] lg:items-center lg:p-12">
+        <Reveal className="grid gap-9 rounded-[36px] border border-line bg-elevated p-8 lg:grid-cols-[1fr_auto] lg:items-center lg:p-12">
           <div>
             <h2 className="text-[clamp(1.5rem,3vw,2.125rem)]">Classes, campus and what happens next</h2>
             <p className="lead mt-4">

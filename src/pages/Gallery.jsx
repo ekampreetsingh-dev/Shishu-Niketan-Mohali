@@ -16,7 +16,9 @@ export default function Gallery() {
         eyebrow="Photographs"
         title="Gallery"
         intro="Events, classes and campus life, published by the school."
-        image={gallery[0]?.images[0]}
+// A distinct shot: the "All" grid opens with the first UMANG frame, so
+        // reusing it here showed the same photograph twice on one screen.
+        image={gallery.find((a) => a.slug === "annualdaysenior")?.images[0]}
       />
 
       <section className="shell py-16 lg:py-20">

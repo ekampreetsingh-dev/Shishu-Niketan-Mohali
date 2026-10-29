@@ -80,11 +80,11 @@ export default function Academics() {
             </div>
 
             <div>
-              {stage.images.length > 0 ? (
-                <LightboxGallery images={stage.images} altPrefix={`${stage.stage} at ${school.name}`} className="lg:grid-cols-2" />
+              {stage.images.length > 1 ? (
+                <LightboxGallery images={stage.images.slice(1)} altPrefix={`${stage.stage} at ${school.name}`} className="lg:grid-cols-2" />
               ) : (
                 <p className="border border-line bg-surface p-8 text-[0.875rem] text-muted">
-                  No photographs are published for this stage yet.
+                  No further photographs are published for this stage yet.
                 </p>
               )}
             </div>

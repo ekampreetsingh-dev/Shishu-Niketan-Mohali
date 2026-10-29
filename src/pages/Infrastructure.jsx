@@ -11,13 +11,15 @@ import { useSpotlight } from "../hooks/useSpotlight.js";
 // Two tiles take a 2x2 slot and the rest 1x1: 2(4) + 7(1) + the stat tile = 16
 // cells, which fills the four-column grid exactly with no holes. Every tile is
 // sized to the 700x464 source ratio so nothing is sliced.
+// The hero shows campusPhotos[0], so the grid renders the other eight:
+// one 2x2 tile (4 cells) + seven 1x1 (7) + the stat tile (1) = 12, which
+// fills three rows of four with no hole.
 const SPANS = [
   "sm:col-span-2 sm:row-span-2 pill-img",
   "pill-img",
   "pill-img",
   "pill-img",
   "pill-img",
-  "sm:col-span-2 sm:row-span-2 pill-img",
   "pill-img",
   "pill-img",
   "pill-img",
@@ -87,7 +89,7 @@ export default function Infrastructure() {
       <section className="shell py-12 lg:py-16">
         <SectionHeading eyebrow="Photographs" title="The campus, in the school's own frames" />
         <div className="mt-10 grid auto-rows-[110px] grid-cols-2 gap-3 sm:auto-rows-[190px] sm:grid-cols-4">
-          {campusPhotos.map((photo, index) => (
+          {campusPhotos.slice(1).map((photo, index) => (
             <Reveal
               key={photo.src}
               delay={index * 0.05}

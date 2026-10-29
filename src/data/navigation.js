@@ -17,6 +17,9 @@ export const navigation = [
   {
     label: "Records",
     to: "/transfer-certificate",
+    // sits near the right end of the pill; centring it here drifts the
+    // panel under FEE PAYMENT so it looks like that item's submenu
+    align: "end",
     children: [
       { label: "School Leaving Certificate", to: "/transfer-certificate" },
       { label: "List of Books", to: "/books-list" },

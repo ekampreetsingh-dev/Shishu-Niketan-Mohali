@@ -62,7 +62,9 @@ function DesktopItem({ item }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.97 }}
             transition={{ duration: 0.2, ease: [0.175, 0.885, 0.32, 1.15] }}
-            className="absolute left-1/2 top-full z-40 mt-2 min-w-[15rem] -translate-x-1/2 rounded-[26px] border border-line bg-elevated p-1.5 shadow-plate"
+            className={`absolute top-full z-40 mt-2 min-w-[15rem] rounded-[26px] border border-line bg-elevated p-1.5 shadow-plate ${
+              item.align === "end" ? "right-0" : "left-1/2 -translate-x-1/2"
+            }`}
           >
             {item.children.map((child) => (
               <li key={child.to}>
