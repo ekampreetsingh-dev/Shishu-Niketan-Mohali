@@ -37,6 +37,7 @@ export default function Home() {
   const [stage, setStage] = useState(0);
 
   const activeStage = academicsContent[stage];
+  const [stageLead, ...stageRest] = activeStage.images.slice(0, 4);
   const teaserAlbums = [gallery[0], gallery[3], gallery[8]].filter(Boolean);
 
   return (
@@ -178,18 +179,31 @@ export default function Home() {
                   </ul>
                 )}
               </div>
-              <div className="grid grid-cols-2 gap-3">
-                {activeStage.images.slice(0, 4).map((src, index) => (
-                  <img
-                    key={src}
-                    src={src}
-                    alt={`${activeStage.stage} — school photograph ${index + 1}`}
-                    loading="lazy"
-                    className={`w-full rounded-full border border-line object-cover ${
-                      index === 0 ? "col-span-2 aspect-3/2" : "aspect-3/2"
-                    }`}
-                  />
-                ))}
+              <div className="space-y-3">
+                <img
+                  src={stageLead}
+                  alt={`${activeStage.stage} — school photograph 1`}
+                  loading="lazy"
+                  className="aspect-3/2 w-full rounded-full border border-line object-cover"
+                />
+                <div className="grid grid-cols-2 gap-3">
+                  {stageRest.map((src, index) => {
+                    // Three tiles in a two-column grid leaves the last one alone
+                    // on the left; give it the row and centre it at tile width.
+                    const isOrphan = index === stageRest.length - 1 && stageRest.length % 2 === 1;
+                    return (
+                      <img
+                        key={src}
+                        src={src}
+                        alt={`${activeStage.stage} — school photograph ${index + 2}`}
+                        loading="lazy"
+                        className={`aspect-3/2 rounded-full border border-line object-cover ${
+                          isOrphan ? "col-span-2 mx-auto w-[calc(50%-0.375rem)]" : "w-full"
+                        }`}
+                      />
+                    );
+                  })}
+                </div>
               </div>
             </motion.div>
           </AnimatePresence>
