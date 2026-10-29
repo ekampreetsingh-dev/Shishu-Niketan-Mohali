@@ -1,0 +1,17 @@
+import { Outlet } from "react-router-dom";
+import Navbar from "../components/Navbar.jsx";
+import Cursor from "../components/Cursor.jsx";
+import Footer from "../components/Footer.jsx";
+
+export default function Layout() {
+  return (
+    <div className="flex min-h-screen flex-col bg-surface">
+      <Navbar />
+      <Cursor />
+      <main className="flex-1">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  );
+}
