@@ -258,7 +258,7 @@ export default function Navbar() {
                     initial={{ opacity: 0, y: 14 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.05 + index * 0.045, ease: [0.175, 0.885, 0.32, 1.15] }}
-                    className="rounded-full border border-line bg-surface"
+                    className={item.children ? "rounded-[26px] border border-line bg-surface" : "rounded-full border border-line bg-surface"}
                   >
                     <div className="flex items-center justify-between gap-3 py-1 pl-4">
                       <NavLink to={item.to} className="block flex-1 py-2 font-display text-[0.9375rem] font-extrabold tracking-[-0.02em] text-ink">
@@ -283,13 +283,13 @@ export default function Navbar() {
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
                           transition={{ duration: 0.24 }}
-                          className="overflow-hidden px-3 pb-3"
+                          className="overflow-hidden px-2 pb-2"
                         >
                           {item.children.map((child) => (
                             <li key={child.to}>
                               <NavLink
                                 to={child.to}
-                                className="block rounded-full px-4 py-2 text-[0.75rem] font-semibold text-muted transition-colors hover:bg-elevated hover:text-ink"
+                                className="block rounded-full px-2 py-2 text-[0.75rem] font-semibold text-muted transition-colors hover:bg-elevated hover:text-ink"
                               >
                                 {child.label}
                               </NavLink>
