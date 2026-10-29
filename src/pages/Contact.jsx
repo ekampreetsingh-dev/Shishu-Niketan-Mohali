@@ -44,13 +44,13 @@ export default function Contact() {
           const Icon = channel.icon;
           return (
             <Reveal key={channel.label} delay={index * 0.07}>
-              <div className="flex h-full flex-col border border-line p-7 transition-colors hover:border-line-strong">
+              <div className="flex h-full min-w-0 flex-col rounded-[28px] border border-line p-6 transition-colors hover:border-line-strong sm:p-7">
                 <span className="flex items-center gap-2.5 font-display text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-muted">
                   <Icon size={15} className="text-accent" /> {channel.label}
                 </span>
                 <ul className="mt-5 flex-1 space-y-2">
                   {channel.lines.map((line) => (
-                    <li key={line} className="font-display text-[1rem] font-bold text-ink">
+                    <li key={line} className="font-display text-[0.9375rem] font-bold break-words text-ink">
                       {line}
                     </li>
                   ))}

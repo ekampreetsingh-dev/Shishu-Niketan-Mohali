@@ -259,6 +259,5 @@ export const galleryAlbums = [
 export const achievementAlbums = [
   { slug: "cyberolympiad", title: "Cyber Olympiad 2016", folder: "cyberolympiad" },
   { slug: "footballtrophy", title: "Football Trophy", folder: "FootballTrophy" },
-  { slug: "taekwondo", title: "Taekwondo Achievers", folder: "TaekwondoAchievers" },
   { slug: "honoured", title: "Time to Feel Honoured", folder: "TimetoFeelHonoured" },
 ];

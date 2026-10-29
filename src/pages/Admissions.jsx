@@ -11,8 +11,8 @@ const feePdf = disclosures.find((item) => item.title === "Fee Structure");
 
 function FeeTable({ caption, rows, columns }) {
   return (
-    <Reveal>
-      <div className="overflow-x-auto border border-line">
+    <Reveal className="min-w-0">
+      <div className="min-w-0 overflow-x-auto rounded-[28px] border border-line">
         <table className="data-table min-w-[30rem]">
           <caption className="border-b border-line bg-elevated px-4 py-3 text-left font-display text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-ink">
             {caption}
@@ -151,7 +151,7 @@ export default function Admissions() {
       <section className="shell pb-20 lg:pb-24">
         <Reveal className="border border-line-strong bg-elevated p-9 text-ink lg:p-12">
           <h2 className="text-[1.5rem] text-ink">Questions before applying?</h2>
-          <p className="mt-4 max-w-2xl text-[0.9375rem] leading-relaxed text-muted">
+          <p className="mt-4 max-w-2xl text-[0.9375rem] leading-relaxed break-words text-muted">
             Call {school.admissionPhones.join(", ")} or write to {school.email}. The admissions desk answers during school
             hours.
           </p>

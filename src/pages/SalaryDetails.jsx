@@ -9,7 +9,7 @@ export default function SalaryDetails() {
 
       <section className="shell py-16 lg:py-20">
         <Reveal>
-          <div className="overflow-x-auto border border-line">
+          <div className="min-w-0 overflow-x-auto rounded-[28px] border border-line">
             <table className="data-table min-w-[42rem]">
               <thead>
                 <tr>

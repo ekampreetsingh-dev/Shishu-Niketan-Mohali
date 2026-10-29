@@ -5,14 +5,14 @@ import { achievements, missingAlbums } from "../data/gallery.js";
 import { images } from "../data/assets.js";
 
 const records = [
-  { src: images.achievement_1, title: "Cyber Olympiad" },
-  { src: images.achievement_2, title: "Football trophy" },
-  { src: images.achievement_3, title: "Taekwondo" },
-  { src: images.achievement_4, title: "Honours" },
-  { src: images.achievement_5, title: "Academic results" },
-  { src: images.achievement_6, title: "Inter-school events" },
-  { src: images.achievement_7, title: "Sports meet" },
-  { src: images.achievement_8, title: "Cultural events" },
+  { src: images.achievement_1, title: "Felicitation of a guest by the school management" },
+  { src: images.achievement_3, title: "Football trophy — shields, cups and medals" },
+  { src: images.achievement_4, title: "Cyber Olympiad, presented with Dainik Bhaskar" },
+  { src: images.achievement_5, title: "Cyber Olympiad — students at the buzzer round" },
+  { src: images.achievement_6, title: "Taekwondo team with coaches and examiners" },
+  { src: images.achievement_7, title: "Prize function on the school stage" },
+  { src: images.achievement_8, title: "Prize function — cultural prize presentation" },
+  { src: images.achievement_2, title: "Staff and parents' association group photograph" },
 ];
 
 export default function Achievements() {
@@ -22,7 +22,7 @@ export default function Achievements() {
         eyebrow="Results"
         title="Achievements"
         intro="Olympiad placements, the inter-school football trophy and national-level taekwondo — published by the school on its own noticeboard."
-        image={images.achievement_2}
+        image={images.achievement_6}
       />
 
       <section className="shell py-16 lg:py-20">

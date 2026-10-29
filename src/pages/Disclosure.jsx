@@ -52,7 +52,7 @@ export default function Disclosure() {
             ))}
           </div>
           <Reveal delay={0.12}>
-            <div className="mt-12 overflow-x-auto border border-line-strong bg-surface">
+            <div className="mt-12 min-w-0 overflow-x-auto rounded-[28px] border border-line-strong bg-surface">
               <table className="data-table min-w-[38rem]">
                 <thead>
                   <tr>

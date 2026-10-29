@@ -1,14 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { images } from "../data/assets.js";
 import { useSpotlight } from "../hooks/useSpotlight.js";
 
-const RADIUS = 38;
-const CORE_EDGE = 17;
+// On a 360px stage the nowrap pills at 38% reach pushed ~15px past the panel,
+// so the ring tightens and the pills shrink below the sm breakpoint.
+function useNarrow(maxPx = 639) {
+  const [narrow, setNarrow] = useState(() => window.matchMedia(`(max-width:${maxPx}px)`).matches);
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width:${maxPx}px)`);
+    const onChange = (event) => setNarrow(event.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, [maxPx]);
+  return narrow;
+}
+
+const RADIUS_WIDE = 38;
+const RADIUS_NARROW = 37;
+const CORE_EDGE_WIDE = 17;
+const CORE_EDGE_NARROW = 14;
 
 // Nodes sit on a circle in a 0–100 space that matches the square stage, so the
 // SVG wires can share the exact same coordinates.
-const place = (index, count, radius = RADIUS) => {
+const place = (index, count, radius) => {
   const angle = (index / count) * Math.PI * 2 - Math.PI / 2;
   return { x: 50 + Math.cos(angle) * radius, y: 50 + Math.sin(angle) * radius, angle };
 };
@@ -30,13 +45,20 @@ function OrbitRing({ inset, duration, reverse }) {
 
 export default function ConstellationSphere({ nodes, caption }) {
   const reduced = useReducedMotion();
+  const narrow = useNarrow();
   const [ready, setReady] = useState(false);
   const onPointerMove = useSpotlight();
 
-  const points = nodes.map((_, i) => place(i, nodes.length));
+  const CORE_EDGE = narrow ? CORE_EDGE_NARROW : CORE_EDGE_WIDE;
+  const radiusFor = (i) => {
+    if (!narrow) return RADIUS_WIDE;
+    // push every other node inward so neighbours clear each other
+    return i % 2 === 0 ? RADIUS_NARROW : RADIUS_NARROW - 9;
+  };
+  const points = nodes.map((_, i) => place(i, nodes.length, radiusFor(i)));
 
   return (
-    <div className="glass-panel spotlight p-6 sm:p-9" onPointerMove={onPointerMove}>
+    <div className="glass-panel spotlight p-4 sm:p-9" onPointerMove={onPointerMove}>
       <div className="relative z-[3] flex flex-wrap items-start justify-between gap-6">
         <div>
           <p className="eyebrow">The whole school</p>
@@ -44,7 +66,7 @@ export default function ConstellationSphere({ nodes, caption }) {
             Every part of the school, <em className="not-italic text-accent">in one orbit</em>
           </h2>
         </div>
-        <p className="max-w-[15rem] text-right text-[0.6875rem] leading-[1.9] text-faint">{caption}</p>
+        <p className="hidden max-w-[15rem] text-right text-[0.6875rem] leading-[1.9] text-faint sm:block">{caption}</p>
       </div>
 
       <div
@@ -66,7 +88,7 @@ export default function ConstellationSphere({ nodes, caption }) {
         <svg viewBox="0 0 100 100" className="pointer-events-none absolute inset-0 z-[1] h-full w-full overflow-visible">
           {points.map((point, index) => {
             const from = place(index, nodes.length, CORE_EDGE);
-            const to = place(index, nodes.length, RADIUS - 5);
+            const to = place(index, nodes.length, radiusFor(index) - (narrow ? 4 : 5));
             const active = index % 3 === 1;
             return (
               <line
@@ -95,7 +117,7 @@ export default function ConstellationSphere({ nodes, caption }) {
             }}
           />
           <div
-            className="relative grid h-[104px] w-[104px] place-items-center rounded-full"
+            className={`relative grid place-items-center rounded-full ${narrow ? "h-[72px] w-[72px]" : "h-[104px] w-[104px]"}`}
             style={{
               background:
                 "radial-gradient(circle at 36% 28%, #ffe0b0 0%, #f7c566 26%, #f2b33d 58%, #9a6410 100%)",
@@ -108,7 +130,7 @@ export default function ConstellationSphere({ nodes, caption }) {
               style={{ animation: reduced ? undefined : "spin 32s linear infinite" }}
             />
             <span className="pointer-events-none absolute -inset-1 rounded-full border border-white/15" />
-            <img src={images.logo} alt="" className="h-[62px] w-[62px] rounded-full object-cover opacity-95" />
+            <img src={images.logo} alt="" className={`rounded-full object-cover opacity-95 ${narrow ? "h-[44px] w-[44px]" : "h-[62px] w-[62px]"}`} />
           </div>
         </div>
 
@@ -126,11 +148,15 @@ export default function ConstellationSphere({ nodes, caption }) {
                 style={{ left: `${point.x}%`, top: `${point.y}%` }}
               >
                 <div
-                  className="flex items-center gap-2 rounded-full border border-line bg-abyss/85 py-1 pl-1.5 pr-3 shadow-lift backdrop-blur-sm"
-                  style={{ height: 30 }}
+                  className={`flex items-center rounded-full border border-line bg-abyss/85 shadow-lift backdrop-blur-sm ${
+                    narrow ? "gap-1 py-0.5 pl-0.5 pr-1.5" : "gap-2 py-1 pl-1.5 pr-3"
+                  }`}
+                  style={{ height: narrow ? 22 : 30 }}
                 >
                   <span
-                    className="grid h-[18px] w-[18px] shrink-0 place-items-center rounded-full bg-accent/15 font-display text-[8px] font-bold text-accent"
+                    className={`grid shrink-0 place-items-center rounded-full bg-accent/15 font-display font-bold text-accent ${
+                      narrow ? "h-[14px] w-[14px] text-[6.5px]" : "h-[18px] w-[18px] text-[8px]"
+                    }`}
                     style={{
                       animation: reduced ? undefined : `node-float ${6 + (index % 3)}s ease-in-out infinite alternate`,
                       animationDelay: `${index * -0.47}s`,
@@ -138,7 +164,7 @@ export default function ConstellationSphere({ nodes, caption }) {
                   >
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  <span className="whitespace-nowrap font-display text-[10px] font-bold uppercase tracking-[0.1em] text-ink">
+                  <span className="whitespace-nowrap font-display text-[8px] font-bold uppercase tracking-[0.04em] text-ink sm:text-[10px] sm:tracking-[0.1em]">
                     {node.label}
                   </span>
                 </div>

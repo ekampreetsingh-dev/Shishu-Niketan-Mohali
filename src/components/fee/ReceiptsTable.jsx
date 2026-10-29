@@ -64,7 +64,7 @@ export default function ReceiptsTable({ studentId, open, onClose }) {
           )}
 
           {state.status === "ready" && state.rows.length > 0 && (
-            <div className="overflow-x-auto">
+            <div className="min-w-0 overflow-x-auto">
               <table className="data-table">
                 <thead>
                   <tr>

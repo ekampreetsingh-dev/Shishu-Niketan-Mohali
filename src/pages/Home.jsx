@@ -208,11 +208,11 @@ export default function Home() {
         </div>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-3">
-          {[0, 4, 7].map((n, index) => (
-            <Reveal key={n} delay={index * 0.08} y={22} className="pill-img border border-line bg-sunken">
+          {[0, 1, 3].map((n, index) => (
+            <Reveal key={campusPhotos[n].src} delay={index * 0.08} y={22} className="pill-img border border-line bg-sunken">
               <motion.img
-                src={campusPhotos[n]}
-                alt={`School campus photograph ${n + 1}`}
+                src={campusPhotos[n].src}
+                alt={`${campusPhotos[n].caption} — Shishu Niketan Public School`}
                 loading="lazy"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.7, ease: [0.175, 0.885, 0.32, 1.15] }}
@@ -221,6 +221,9 @@ export default function Home() {
             </Reveal>
           ))}
         </div>
+        <p className="mt-4 text-[0.75rem] text-faint">
+          Main academic block · Science laboratory · Library stacks
+        </p>
       </section>
 
       {/* Achievements teaser */}

@@ -88,6 +88,25 @@ node scripts/fee-flow.mjs      # drives the whole portal in a real browser
 - `src/data/sections.js` is the single place that decides which photographs belong to which
   academic stage and which facility.
 
+## Deploying
+
+The site is a single-page app, so routes like `/academics` exist only in the
+router — there is no file at that path. Any host that serves files literally
+will return 404 on refresh or on a shared deep link.
+
+`vercel.json` adds the rewrite every non-asset path falls back to
+`/index.html`. Vercel checks the filesystem first, so hashed bundles under
+`/assets/` are still served directly and only unknown paths are rewritten.
+
+If you move hosts, the equivalent is:
+
+| Host | Configuration |
+| --- | --- |
+| Netlify | `_redirects` containing `/*  /index.html  200` |
+| Cloudflare Pages | a `_redirects` file with the same line |
+| Nginx | `try_files $uri $uri/ /index.html;` |
+| GitHub Pages | no rewrite support — use HashRouter instead |
+
 ## Design
 
 Dark, high-contrast layout after <https://www.ash.nl/> and two portfolio references: true black,

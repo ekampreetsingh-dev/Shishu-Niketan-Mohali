@@ -1,20 +1,16 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { CameraOff } from "lucide-react";
 import Reveal from "../components/Reveal.jsx";
 import { SectionHeading } from "../components/PageHeader.jsx";
 import LightboxGallery from "../components/LightboxGallery.jsx";
 import { school } from "../data/school.js";
-import { images } from "../data/assets.js";
-import { campusPills } from "../data/sections.js";
+import { campusPills, campusPhotos } from "../data/sections.js";
 import { useSpotlight } from "../hooks/useSpotlight.js";
 
-// The nine photographs the school itself publishes on its Infrastructure page.
-const campus = Array.from({ length: 9 }, (_, i) => images[`infra_pics_infrasture${i + 1}`]).filter(Boolean);
-
-// The school's campus shots are 700x464, so every tile is sized to that ratio —
-// a taller frame would make object-cover slice off the building.
-// Two tiles take a 2x2 slot, the rest 1x1: 2(4) + 7(1) + the stat tile = 16
-// cells, which fills a four-column grid exactly with no holes.
+// Two tiles take a 2x2 slot and the rest 1x1: 2(4) + 7(1) + the stat tile = 16
+// cells, which fills the four-column grid exactly with no holes. Every tile is
+// sized to the 700x464 source ratio so nothing is sliced.
 const SPANS = [
   "sm:col-span-2 sm:row-span-2 pill-img",
   "pill-img",
@@ -26,6 +22,34 @@ const SPANS = [
   "pill-img",
   "pill-img",
 ];
+
+function FacilityPill({ item, isActive, onClick }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={isActive}
+      data-cursor={item.images.length ? "Show" : undefined}
+      className={`relative isolate flex items-center gap-2.5 rounded-full border py-1.5 pr-5 transition-colors duration-300 ${
+        item.images.length ? "pl-1.5" : "pl-4"
+      } ${isActive ? "border-accent text-void" : "border-line text-muted hover:border-line-strong hover:text-ink"}`}
+    >
+      {isActive && (
+        <motion.span
+          layoutId="facility-active"
+          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+          className="absolute inset-0 -z-10 rounded-full bg-accent"
+        />
+      )}
+      {item.images.length > 0 ? (
+        <img src={item.images[0]} alt="" loading="lazy" className="h-8 w-8 rounded-full border border-line object-cover" />
+      ) : (
+        <CameraOff size={15} className={isActive ? "text-void/60" : "text-faint"} aria-hidden="true" />
+      )}
+      <span className="font-display text-[0.8125rem] font-bold">{item.label}</span>
+    </button>
+  );
+}
 
 export default function Infrastructure() {
   const [facility, setFacility] = useState(0);
@@ -46,15 +70,16 @@ export default function Infrastructure() {
           </p>
         </Reveal>
         <Reveal delay={0.12} y={26}>
-          <div className="pill-img border border-line bg-sunken">
+          <figure className="pill-img border border-line bg-sunken">
             <img
-              src={campus[0]}
-              alt="Shishu Niketan Public School building, Sector-66 Mohali"
+              src={campusPhotos[0].src}
+              alt={`${campusPhotos[0].caption} — Shishu Niketan Public School`}
               width={700}
               height={464}
               className="aspect-4/3 w-full object-cover lg:aspect-3/2"
             />
-          </div>
+            <figcaption className="sr-only">{campusPhotos[0].caption}</figcaption>
+          </figure>
         </Reveal>
       </section>
 
@@ -62,30 +87,34 @@ export default function Infrastructure() {
       <section className="shell py-12 lg:py-16">
         <SectionHeading eyebrow="Photographs" title="The campus, in the school's own frames" />
         <div className="mt-10 grid auto-rows-[110px] grid-cols-2 gap-3 sm:auto-rows-[190px] sm:grid-cols-4">
-          {campus.map((src, index) => (
+          {campusPhotos.map((photo, index) => (
             <Reveal
-              key={src}
+              key={photo.src}
               delay={index * 0.05}
               y={20}
-              className={`${SPANS[index % SPANS.length]} border border-line bg-sunken`}
+              title={photo.caption}
+              className={`${SPANS[index % SPANS.length]} group relative border border-line bg-sunken`}
             >
               <motion.img
-                src={src}
-                alt={`School campus photograph ${index + 1}`}
+                src={photo.src}
+                alt={`${photo.caption} at ${school.name}, ${school.locality}`}
                 loading={index < 2 ? "eager" : "lazy"}
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.7, ease: [0.175, 0.885, 0.32, 1.15] }}
                 className="h-full w-full object-cover"
               />
+              <span className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-2 bg-abyss/85 px-3 py-2 text-[0.625rem] font-semibold uppercase tracking-[0.12em] text-ink opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                {photo.caption}
+              </span>
             </Reveal>
           ))}
 
-          {/* Nine frames leave a two-column hole on the last row; the campus
-              figures close it without inventing a tenth photograph. */}
+          {/* Nine frames leave one cell; the published campus figures fill it
+              rather than a tenth photograph that does not exist. */}
           <Reveal
             delay={0.5}
             y={20}
-            className="flex flex-col justify-end rounded-[32px] border border-line bg-surface p-5"
+            className="col-span-2 row-span-2 flex flex-col justify-end rounded-[28px] border border-line bg-surface p-5 sm:col-span-1 sm:row-span-1 sm:rounded-[32px]"
           >
             <p className="eyebrow">On the data sheet</p>
             <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-3">
@@ -105,44 +134,18 @@ export default function Infrastructure() {
         </div>
       </section>
 
-      {/* Facilities — pill selector with its own photography */}
+      {/* Facilities */}
       <section className="mt-8 border-y border-line bg-sunken">
         <div className="shell py-16 lg:py-20">
           <SectionHeading eyebrow="Facilities" title="What the students use" />
 
           <Reveal delay={0.08} className="mt-9">
             <ul className="flex flex-wrap gap-2">
-              {campusPills.map((item, index) => {
-                const isActive = facility === index;
-                return (
-                  <li key={item.label}>
-                    <button
-                      type="button"
-                      onClick={() => setFacility(index)}
-                      data-cursor="Show"
-                      aria-pressed={isActive}
-                      className={`relative isolate flex items-center gap-2.5 rounded-full border py-1.5 pl-1.5 pr-5 transition-colors duration-300 ${
-                        isActive ? "border-accent text-void" : "border-line text-muted hover:border-line-strong hover:text-ink"
-                      }`}
-                    >
-                      {isActive && (
-                        <motion.span
-                          layoutId="facility-active"
-                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                          className="absolute inset-0 -z-10 rounded-full bg-accent"
-                        />
-                      )}
-                      <img
-                        src={item.images[0]}
-                        alt=""
-                        loading="lazy"
-                        className="h-8 w-8 rounded-full border border-line object-cover"
-                      />
-                      <span className="font-display text-[0.8125rem] font-bold">{item.label}</span>
-                    </button>
-                  </li>
-                );
-              })}
+              {campusPills.map((item, index) => (
+                <li key={item.label}>
+                  <FacilityPill item={item} isActive={facility === index} onClick={() => setFacility(index)} />
+                </li>
+              ))}
             </ul>
           </Reveal>
 
@@ -155,20 +158,36 @@ export default function Infrastructure() {
               transition={{ duration: 0.34, ease: [0.175, 0.885, 0.32, 1.15] }}
               className="mt-9 grid gap-6 lg:grid-cols-[0.4fr_0.6fr] lg:items-start"
             >
-              <div onPointerMove={onPointerMove} className="spotlight rounded-[32px] border border-line bg-surface p-7">
+              <div
+                onPointerMove={onPointerMove}
+                className="spotlight rounded-[32px] border border-line bg-surface p-7"
+              >
                 <h3 className="text-[1.5rem]">{active.label}</h3>
                 <p className="mt-3 text-[0.9375rem] leading-relaxed text-muted">{active.note}</p>
-                <p className="mt-6 text-[0.75rem] uppercase tracking-[0.14em] text-faint">
-                  {active.images.length} photographs on record
+                <p className="mt-6 text-[0.6875rem] uppercase tracking-[0.14em] text-faint">
+                  {active.images.length > 0
+                    ? `${active.images.length} photograph${active.images.length === 1 ? "" : "s"} on record`
+                    : "No photograph published"}
                 </p>
               </div>
-              <LightboxGallery images={active.images} altPrefix={active.label} className="lg:grid-cols-2" />
+
+              {active.images.length > 0 ? (
+                <LightboxGallery images={active.images} altPrefix={`${active.label} at ${school.name}`} className="lg:grid-cols-2" />
+              ) : (
+                <div className="flex flex-col items-start justify-center gap-3 rounded-[32px] border border-dashed border-line-strong bg-surface p-10">
+                  <CameraOff size={22} className="text-faint" aria-hidden="true" />
+                  <p className="max-w-sm text-[0.875rem] leading-relaxed text-muted">
+                    The school lists this facility but has never photographed it. Rather than show an unrelated picture,
+                    the tile is left empty — ask the office for details.
+                  </p>
+                </div>
+              )}
             </motion.div>
           </AnimatePresence>
         </div>
       </section>
 
-      {/* Everything else on campus */}
+      {/* Beyond the classrooms */}
       <section className="shell py-16 lg:py-20">
         <SectionHeading eyebrow="Also on the data sheet" title="Beyond the classrooms" />
         <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
